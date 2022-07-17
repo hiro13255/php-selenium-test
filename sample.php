@@ -11,15 +11,20 @@ use Facebook\WebDriver\WebDriverBy;
 $driverPath = realpath('./chromedriver');
 putenv('webdriver.chrome.driver=' . $driverPath);
 
-$driver = ChromeDriver::start();
+$options = new ChromeOptions();
+$options->addArguments(['--headless']);
 
-$driver->get('https://www.google.com');
+$capabilities = Facebook\WebDriver\Remote\DesiredCapabilities::chrome();
+$capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
 
-$driver->wait(5);
+$driver = ChromeDriver::start($capabilities);
+
+$driver->get('https://www.rentio.jp/matome/2019/07/sony-ilce-7m3-review/');
+
+$driver->wait(2);
+print($driver->getTitle());
 
 $file = './sample.png';
 $driver->takeScreenshot($file);
 
 $driver->quit();
-
-
